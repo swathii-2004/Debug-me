@@ -748,6 +748,9 @@ class Game {
 
   // --- Scoring & Consecutive Advances ---
   handleCorrect() {
+    this.dom.btnCorrect.disabled = true;
+    this.dom.btnSkip.disabled = true;
+
     this.stopTimer();
     this.sounds.playSuccess();
 
@@ -784,8 +787,11 @@ class Game {
   }
 
   handleSkip() {
+    this.dom.btnCorrect.disabled = true;
+    this.dom.btnSkip.disabled = true;
+
     this.stopTimer();
-    
+
     // Skip animation (card tilt shake)
     this.dom.wordCard.classList.add('card-skip-anim');
     
