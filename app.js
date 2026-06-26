@@ -219,6 +219,7 @@ class Game {
     this.isWordRevealed = false;
     this.isTimerRunning = false;
     this.activeWordString = "";
+    this.isProcessing = false;
 
     // Engines
     this.sounds = new AudioEngine();
@@ -594,6 +595,10 @@ class Game {
   }
 
   prepareRoundView() {
+    this.isProcessing = false;
+    this.dom.btnCorrect.disabled = false;
+    this.dom.btnSkip.disabled = false;
+
     this.activeWordString = "";
     this.showCardState('empty');
     
@@ -683,11 +688,14 @@ class Game {
   startTimer() {
     if (this.isTimerRunning) return;
     this.isTimerRunning = true;
-    this.timerSeconds = 60;
-    this.resetTimerUI();
 
     this.dom.btnStart.classList.add('hidden');
+    this.dom.btnCorrect.disabled = false;
+    this.dom.btnSkip.disabled = false;
     this.dom.scoringControls.classList.remove('hidden');
+
+    this.timerSeconds = 60;
+    this.resetTimerUI();
 
     if (!this.isWordRevealed) {
       this.revealWord(true);
@@ -748,6 +756,8 @@ class Game {
 
   // --- Scoring & Consecutive Advances ---
   handleCorrect() {
+    if (this.isProcessing) return;
+    this.isProcessing = true;
     this.dom.btnCorrect.disabled = true;
     this.dom.btnSkip.disabled = true;
 
@@ -787,6 +797,8 @@ class Game {
   }
 
   handleSkip() {
+    if (this.isProcessing) return;
+    this.isProcessing = true;
     this.dom.btnCorrect.disabled = true;
     this.dom.btnSkip.disabled = true;
 
@@ -854,6 +866,7 @@ class Game {
 
   // --- End of Game Leaderboard ---
   endGameBattle() {
+    this.isProcessing = false;
     this.stopTimer();
 
     // Smooth transition from Gameplay to Winner screen
