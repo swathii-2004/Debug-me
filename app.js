@@ -224,11 +224,13 @@ class Game {
 
     // Cache DOM elements
     this.dom = {
+      // Home Screen
+      homeSection: document.getElementById('home-section'),
+      btnGoToSetup: document.getElementById('btn-go-to-setup'),
+
       // Setup Screen
       setupSection: document.getElementById('setup-section'),
-      btnTeamsDec: document.getElementById('btn-teams-dec'),
-      btnTeamsInc: document.getElementById('btn-teams-inc'),
-      teamsCountVal: document.getElementById('teams-count-val'),
+      teamsSegmented: document.getElementById('teams-segmented'),
       teamInputsList: document.getElementById('team-inputs-list'),
       btnStartGame: document.getElementById('btn-start-game'),
 
@@ -279,8 +281,22 @@ class Game {
   }
 
   initEventListeners() {
-    this.dom.btnTeamsDec.addEventListener('click', () => this.adjustTeamsCount(-1));
-    this.dom.btnTeamsInc.addEventListener('click', () => this.adjustTeamsCount(1));
+    // Navigation: Home -> Setup Screen
+    this.dom.btnGoToSetup.addEventListener('click', () => {
+      this.transitionScreen(this.dom.homeSection, this.dom.setupSection);
+    });
+
+    // Segmented pills team count listener
+    const segmentButtons = this.dom.teamsSegmented.querySelectorAll('.segment-btn');
+    segmentButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        segmentButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.teamsCount = parseInt(btn.getAttribute('data-val'));
+        this.renderSetupInputs();
+      });
+    });
+
     this.dom.btnStartGame.addEventListener('click', () => this.startGameBattle());
 
     this.dom.wordCard.addEventListener('click', () => {
@@ -295,8 +311,8 @@ class Game {
     this.dom.btnSkip.addEventListener('click', () => this.handleSkip());
     this.dom.btnCorrect.addEventListener('click', () => this.handleCorrect());
 
-    this.dom.btnReset.addEventListener('click', () => this.showSetupScreen());
-    this.dom.btnRestart.addEventListener('click', () => this.showSetupScreen());
+    this.dom.btnReset.addEventListener('click', () => this.showHomeScreen());
+    this.dom.btnRestart.addEventListener('click', () => this.showHomeScreen());
 
     const initAudio = () => {
       this.sounds.init();
@@ -379,17 +395,29 @@ class Game {
     }
   }
 
-  showSetupScreen() {
+  showHomeScreen() {
     this.stopTimer();
     this.activeWordString = "";
-    this.currentWordIndex = -1;
 
-    // Determine current visible elements to fade out
+    // Reset segmented control states to default (3 teams)
+    const segmentButtons = this.dom.teamsSegmented.querySelectorAll('.segment-btn');
+    segmentButtons.forEach(btn => {
+      if (btn.getAttribute('data-val') === "3") {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+    this.teamsCount = 3;
+    this.renderSetupInputs();
+
     let activeScreen = null;
     if (!this.dom.gamePlaySection.classList.contains('hidden')) {
       activeScreen = this.dom.gamePlaySection;
     } else if (!this.dom.winnerSection.classList.contains('hidden')) {
       activeScreen = this.dom.winnerSection;
+    } else if (!this.dom.setupSection.classList.contains('hidden')) {
+      activeScreen = this.dom.setupSection;
     }
 
     if (activeScreen) {
@@ -397,7 +425,7 @@ class Game {
       this.dom.appFooter.classList.add('fade-out-scale');
       this.dom.wordCounterWrapper.classList.add('fade-out-scale');
       
-      this.transitionScreen(activeScreen, this.dom.setupSection);
+      this.transitionScreen(activeScreen, this.dom.homeSection);
       
       setTimeout(() => {
         this.dom.scoreboardSection.classList.add('hidden');
@@ -408,9 +436,8 @@ class Game {
         this.dom.wordCounterWrapper.classList.remove('fade-out-scale');
       }, 200);
     } else {
-      this.dom.setupSection.classList.remove('hidden');
+      this.dom.homeSection.classList.remove('hidden');
     }
-    this.renderSetupInputs();
   }
 
   // --- Initialize Active Battle ---

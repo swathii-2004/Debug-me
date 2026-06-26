@@ -34,18 +34,71 @@
       </div>
     </header>
 
-    <!-- SETUP SCREEN (Visible on Start) -->
-    <section class="setup-section fade-in-scale" id="setup-section">
+    <!-- HOME PAGE SCREEN (Visible on Start) -->
+    <section class="home-section fade-in-scale" id="home-section">
+      <div class="home-hero">
+        <div class="hero-icon">🎮</div>
+        <h2 class="hero-title">Tech Charades</h2>
+        <p class="hero-tagline">Act out technical words. No speaking. High voltage fun.</p>
+      </div>
+
+      <div class="rules-card">
+        <h3 class="rules-heading">HOW TO PLAY</h3>
+        <ul class="rules-list">
+          <li>
+            <span class="rule-num">1</span>
+            <div class="rule-content">
+              <h4>Setup Teams</h4>
+              <p>Assemble 2 to 10 teams and enter custom names.</p>
+            </div>
+          </li>
+          <li>
+            <span class="rule-num">2</span>
+            <div class="rule-content">
+              <h4>Consecutive Decks</h4>
+              <p>Each team gets exactly 5 random tech words to play back-to-back.</p>
+            </div>
+          </li>
+          <li>
+            <span class="rule-num">3</span>
+            <div class="rule-content">
+              <h4>60s Action Timer</h4>
+              <p>Actor taps "Get Word" and has 60 seconds to act it out (no talking).</p>
+            </div>
+          </li>
+          <li>
+            <span class="rule-num">4</span>
+            <div class="rule-content">
+              <h4>Earn Points</h4>
+              <p>✅ Correct awards +1 point. Turn advances when deck is empty.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <button type="button" class="btn-primary btn-start-game" id="btn-go-to-setup">
+        PLAY GAME
+      </button>
+    </section>
+
+    <!-- GAME SETUP SCREEN (Hidden initially) -->
+    <section class="setup-section hidden" id="setup-section">
       <div class="setup-card">
         <h2 class="setup-title">GAME SETUP</h2>
         
-        <!-- Team Count Selector -->
+        <!-- Segmented Tab Team Count Selector -->
         <div class="setup-group">
           <label class="setup-label">Number of Teams</label>
-          <div class="count-selector">
-            <button type="button" class="btn-count" id="btn-teams-dec">−</button>
-            <span class="count-value" id="teams-count-val">3</span>
-            <button type="button" class="btn-count" id="btn-teams-inc">+</button>
+          <div class="segmented-control" id="teams-segmented">
+            <button type="button" class="segment-btn" data-val="2">2</button>
+            <button type="button" class="segment-btn active" data-val="3">3</button>
+            <button type="button" class="segment-btn" data-val="4">4</button>
+            <button type="button" class="segment-btn" data-val="5">5</button>
+            <button type="button" class="segment-btn" data-val="6">6</button>
+            <button type="button" class="segment-btn" data-val="7">7</button>
+            <button type="button" class="segment-btn" data-val="8">8</button>
+            <button type="button" class="segment-btn" data-val="9">9</button>
+            <button type="button" class="segment-btn" data-val="10">10</button>
           </div>
         </div>
 
