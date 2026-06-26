@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>debug me | Tech Charades</title>
+  <!-- Google Fonts for modern tech typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <!-- Dynamic Glowing Background Orbs -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Canvas for celebration confetti -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-container">
+        <span class="logo-icon">&lt;/&gt;</span>
+        <h1 class="logo-text">debug <span class="accent-text">me</span></h1>
+      </div>
+      <div class="word-counter hidden" id="word-counter-wrapper">
+        <span class="counter-label">WORDS REMAINING:</span>
+        <span class="counter-val" id="remaining-count">30</span>
+      </div>
+    </header>
+
+    <!-- SETUP SCREEN (Visible on Start) -->
+    <section class="setup-section fade-in-scale" id="setup-section">
+      <div class="setup-card">
+        <h2 class="setup-title">GAME SETUP</h2>
+        
+        <!-- Team Count Selector -->
+        <div class="setup-group">
+          <label class="setup-label">Number of Teams</label>
+          <div class="count-selector">
+            <button type="button" class="btn-count" id="btn-teams-dec">−</button>
+            <span class="count-value" id="teams-count-val">3</span>
+            <button type="button" class="btn-count" id="btn-teams-inc">+</button>
+          </div>
+        </div>
+
+        <!-- Dynamic Team Inputs Container -->
+        <div class="setup-group">
+          <label class="setup-label">Team Names</label>
+          <div class="team-inputs-list" id="team-inputs-list">
+            <!-- Dynamic inputs inserted here by JS -->
+          </div>
+        </div>
+
+        <button type="button" class="btn-primary btn-start-game" id="btn-start-game">
+          START BATTLE
+        </button>
+      </div>
+    </section>
+
+    <!-- SCOREBOARD (Populated Dynamically, Hidden during Setup) -->
+    <section class="scoreboard-section hidden" id="scoreboard-section">
+      <div class="scoreboard-grid" id="scoreboard-grid">
+        <!-- Dynamic score cards go here -->
+      </div>
+    </section>
+
+    <!-- GAMEPLAY VIEW (Hidden during Setup) -->
+    <main class="game-play-section hidden" id="game-play-section">
+      
+      <!-- Current Team Alert Banner -->
+      <div class="turn-banner" id="turn-banner">
+        Active Turn: <span id="current-playing-team">Team 1</span>
+      </div>
+
+      <!-- Timer Display -->
+      <div class="timer-container" id="timer-container">
+        <svg class="timer-svg" viewBox="0 0 100 100">
+          <circle class="timer-circle-bg" cx="50" cy="50" r="45" />
+          <circle class="timer-circle-progress" id="timer-progress" cx="50" cy="50" r="45" />
+        </svg>
+        <div class="timer-text" id="timer-text">60</div>
+      </div>
+
+      <!-- 3D Word Flip Card Container -->
+      <div class="word-card-outer">
+        <div class="word-card" id="word-card">
+          <div class="card-inner" id="card-inner">
+            
+            <!-- CARD BACK (Shows instructions or locked overlay) -->
+            <div class="card-face card-back" id="card-back">
+              <div class="card-state" id="back-state-empty">
+                <p class="instruction-text">Tap "Get Word" below to draw a card!</p>
+              </div>
+              <div class="card-state hidden" id="back-state-drawn">
+                <span class="reveal-icon">🔒</span>
+                <p class="reveal-prompt">TAP TO REVEAL WORD</p>
+                <p class="guesser-warning">Actor eyes only!</p>
+              </div>
+            </div>
+            
+            <!-- CARD FRONT (Shows active word) -->
+            <div class="card-face card-front" id="card-front">
+              <div class="card-state">
+                <h2 class="active-word" id="active-word">Wi-Fi</h2>
+                <div class="card-badge" id="card-badge">ACT IT OUT!</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Word Display Control Options -->
+      <div class="word-controls-row">
+        <button type="button" class="ctrl-btn-secondary" id="btn-toggle-reveal" disabled>
+          <span class="icon">👁️</span> <span id="toggle-reveal-text">Show Word</span>
+        </button>
+      </div>
+
+      <!-- Gameplay Buttons -->
+      <div class="action-buttons-grid">
+        <!-- Setup/Draw Button -->
+        <button type="button" class="btn-primary btn-get-word" id="btn-get-word">
+          GET WORD
+        </button>
+
+        <!-- Play Controls (Initially Hidden until word drawn) -->
+        <div class="play-controls-group hidden" id="play-controls-group">
+          <button type="button" class="btn-primary btn-start" id="btn-start">
+            START TIMER
+          </button>
+          
+          <div class="scoring-controls hidden" id="scoring-controls">
+            <button type="button" class="btn-action btn-skip" id="btn-skip">
+              ❌ Skip
+            </button>
+            <button type="button" class="btn-action btn-correct" id="btn-correct">
+              ✅ Correct
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- WINNER SCREEN (Hidden by Default) -->
+    <section class="winner-section hidden" id="winner-section">
+      <div class="winner-card">
+        <div class="winner-trophy">🏆</div>
+        <h2 class="winner-title">GAME COMPLETED!</h2>
+        
+        <div class="winner-announcement" id="winner-announcement">
+          LEADERBOARD
+        </div>
+
+        <!-- Leaderboard list -->
+        <div class="leaderboard-table" id="leaderboard-table">
+          <!-- Dynamic leaderboard lines go here -->
+        </div>
+
+        <button type="button" class="btn-primary btn-restart" id="btn-restart-game">
+          PLAY AGAIN
+        </button>
+      </div>
+    </section>
+
+    <!-- Footer Controls -->
+    <footer class="app-footer hidden" id="app-footer">
+      <button type="button" class="btn-reset" id="btn-reset">
+        🔄 Reset Game
+      </button>
+    </footer>
+  </div>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
