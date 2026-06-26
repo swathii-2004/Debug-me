@@ -210,6 +210,8 @@ class Game {
     this.teamsCount = 3;
     this.teams = [];
     this.activeTeamIndex = 0;
+    this.isTieBreakerMode = false;
+    this.originalTeams = [];
 
     // Timer & Game loop state
     this.timerSeconds = 60;
@@ -270,6 +272,7 @@ class Game {
       winnerAnnouncement: document.getElementById('winner-announcement'),
       leaderboardTable: document.getElementById('leaderboard-table'),
       btnRestart: document.getElementById('btn-restart-game'),
+      btnTiebreaker: document.getElementById('btn-tiebreaker'),
 
       // Footer
       appFooter: document.getElementById('app-footer'),
@@ -313,6 +316,7 @@ class Game {
 
     this.dom.btnReset.addEventListener('click', () => this.showHomeScreen());
     this.dom.btnRestart.addEventListener('click', () => this.showHomeScreen());
+    this.dom.btnTiebreaker.addEventListener('click', () => this.startTieBreakerRound());
 
     const initAudio = () => {
       this.sounds.init();
@@ -398,6 +402,8 @@ class Game {
   showHomeScreen() {
     this.stopTimer();
     this.activeWordString = "";
+    this.isTieBreakerMode = false;
+    this.originalTeams = [];
 
     // Reset segmented control states to default (3 teams)
     const segmentButtons = this.dom.teamsSegmented.querySelectorAll('.segment-btn');
@@ -843,6 +849,19 @@ class Game {
       this.dom.appFooter.classList.remove('fade-out-scale');
     }, 200);
 
+    // Merge tie-breaker scores back into original teams list
+    if (this.isTieBreakerMode) {
+      this.teams.forEach(tiedTeam => {
+        const originalTeam = this.originalTeams.find(t => t.id === tiedTeam.id);
+        if (originalTeam) {
+          originalTeam.score = tiedTeam.score;
+          originalTeam.words = [];
+        }
+      });
+      this.teams = [...this.originalTeams];
+      this.isTieBreakerMode = false;
+    }
+
     const standings = [...this.teams].sort((a, b) => b.score - a.score);
     
     const topScore = standings[0].score;
@@ -852,23 +871,42 @@ class Game {
       this.dom.winnerAnnouncement.textContent = `🏆 ${winners[0].name.toUpperCase()} WINS!`;
       this.dom.winnerAnnouncement.style.color = winners[0].hexColor;
       this.dom.winnerAnnouncement.style.textShadow = winners[0].shadowStyle;
+      this.dom.btnTiebreaker.classList.add('hidden');
     } else {
       this.dom.winnerAnnouncement.textContent = `🤝 TIE GAME!`;
       this.dom.winnerAnnouncement.style.color = '#ffffff';
       this.dom.winnerAnnouncement.style.textShadow = '0 0 10px rgba(255, 255, 255, 0.4)';
+      this.dom.btnTiebreaker.classList.remove('hidden');
     }
 
+    let currentRank = 1;
+    let previousScore = null;
     this.dom.leaderboardTable.innerHTML = '';
     standings.forEach((team, idx) => {
       const row = document.createElement('div');
-      row.className = `leaderboard-row ${idx === 0 ? 'rank-1' : ''}`;
+      row.className = `leaderboard-row ${idx === 0 || team.score === topScore ? 'rank-1' : ''}`;
       
+      if (previousScore !== null && team.score < previousScore) {
+        currentRank = idx + 1;
+      }
+      previousScore = team.score;
+
       const rankAndName = document.createElement('div');
       rankAndName.className = 'leaderboard-rank-name';
 
       const rankBadge = document.createElement('span');
       rankBadge.className = 'rank-badge';
-      rankBadge.textContent = idx + 1;
+
+      if (team.score === topScore && winners.length > 1) {
+        rankBadge.textContent = 'TIE';
+        rankBadge.style.background = 'rgba(255, 0, 85, 0.18)';
+        rankBadge.style.color = 'var(--team-color-3)';
+        rankBadge.style.border = '1px solid var(--team-color-3)';
+        rankBadge.style.boxShadow = 'var(--shadow-3)';
+        rankBadge.style.width = '34px';
+      } else {
+        rankBadge.textContent = currentRank;
+      }
 
       const nameSpan = document.createElement('span');
       nameSpan.textContent = team.name;
@@ -888,6 +926,75 @@ class Game {
     });
 
     this.triggerWinnerCelebration();
+  }
+
+  startTieBreakerRound() {
+    const topScore = Math.max(...this.teams.map(t => t.score));
+    const tiedTeams = this.teams.filter(t => t.score === topScore);
+
+    // Deep backup of all teams
+    this.originalTeams = this.teams.map(t => ({
+      id: t.id,
+      name: t.name,
+      score: t.score,
+      words: [...t.words],
+      hexColor: t.hexColor,
+      glowClass: t.glowClass,
+      shadowStyle: t.shadowStyle
+    }));
+
+    // Exclude other teams, reset active words list for tied teams
+    this.teams = tiedTeams.map(t => ({
+      id: t.id,
+      name: t.name,
+      score: t.score,
+      words: [],
+      hexColor: t.hexColor,
+      glowClass: t.glowClass,
+      shadowStyle: t.shadowStyle
+    }));
+
+    this.isTieBreakerMode = true;
+
+    const numTiedTeams = this.teams.length;
+    const wordsNeeded = numTiedTeams * 5;
+
+    let activePool = [];
+    const shuffledPriority = this.shuffle(PRIORITY_WORDS);
+    const shuffledBackup = this.shuffle(BACKUP_TECH_WORDS);
+
+    if (wordsNeeded <= shuffledPriority.length) {
+      activePool = shuffledPriority.slice(0, wordsNeeded);
+    } else {
+      activePool = [...shuffledPriority];
+      const extraCount = wordsNeeded - shuffledPriority.length;
+      for (let k = 0; k < extraCount; k++) {
+        activePool.push(shuffledBackup[k]);
+      }
+      activePool = this.shuffle(activePool);
+    }
+
+    this.teams.forEach(team => {
+      team.words = [];
+      for (let k = 0; k < 5; k++) {
+        team.words.push(activePool.pop());
+      }
+    });
+
+    this.activeTeamIndex = 0;
+    this.isWordRevealed = false;
+    this.isTimerRunning = false;
+    this.activeWordString = "";
+
+    this.transitionScreen(this.dom.winnerSection, this.dom.gamePlaySection, [
+      this.dom.scoreboardSection,
+      this.dom.appFooter,
+      this.dom.wordCounterWrapper
+    ]);
+
+    this.renderDynamicScoreboard();
+    this.updateActiveTeamTurn();
+    this.prepareRoundView();
   }
 
   triggerWinnerCelebration() {
