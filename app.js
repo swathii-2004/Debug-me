@@ -229,6 +229,11 @@ class Game {
       // Home Screen
       homeSection: document.getElementById('home-section'),
       btnGoToSetup: document.getElementById('btn-go-to-setup'),
+      btnViewRules: document.getElementById('btn-view-rules'),
+
+      // Rules Screen
+      rulesSection: document.getElementById('rules-section'),
+      btnRulesBack: document.getElementById('btn-rules-back'),
 
       // Setup Screen
       setupSection: document.getElementById('setup-section'),
@@ -287,6 +292,16 @@ class Game {
     // Navigation: Home -> Setup Screen
     this.dom.btnGoToSetup.addEventListener('click', () => {
       this.transitionScreen(this.dom.homeSection, this.dom.setupSection);
+    });
+
+    // Navigation: Home -> Rules Screen
+    this.dom.btnViewRules.addEventListener('click', () => {
+      this.transitionScreen(this.dom.homeSection, this.dom.rulesSection);
+    });
+
+    // Navigation: Rules Screen -> Home
+    this.dom.btnRulesBack.addEventListener('click', () => {
+      this.transitionScreen(this.dom.rulesSection, this.dom.homeSection);
     });
 
     // Segmented pills team count listener
@@ -424,6 +439,8 @@ class Game {
       activeScreen = this.dom.winnerSection;
     } else if (!this.dom.setupSection.classList.contains('hidden')) {
       activeScreen = this.dom.setupSection;
+    } else if (!this.dom.rulesSection.classList.contains('hidden')) {
+      activeScreen = this.dom.rulesSection;
     }
 
     if (activeScreen) {
