@@ -20,18 +20,31 @@ const BACKUP_TECH_WORDS = [
 ];
 
 // Simplified Team Names
-const DEFAULT_TEAM_NAMES = ["Team 1", "Team 2", "Team 3", "Team 4", "Team 5", "Team 6"];
+const DEFAULT_TEAM_NAMES = [
+  "Team 1", "Team 2", "Team 3", "Team 4", "Team 5",
+  "Team 6", "Team 7", "Team 8", "Team 9", "Team 10"
+];
 
 // Dynamic Color Mapping parameters
-const TEAM_HEX_COLORS = ['#39ff14', '#00f0ff', '#ff0055', '#ffb700', '#b026ff', '#00a8ff'];
-const GLOW_CLASSES = ['glowing-green', 'glowing-cyan', 'glowing-pink', 'glowing-yellow', 'glowing-purple', 'glowing-ice'];
+const TEAM_HEX_COLORS = [
+  '#39ff14', '#00f0ff', '#ff0055', '#ffb700', '#b026ff',
+  '#00a8ff', '#ff5f00', '#ff00ff', '#00ffcc', '#dfff11'
+];
+const GLOW_CLASSES = [
+  'glowing-green', 'glowing-cyan', 'glowing-pink', 'glowing-yellow', 'glowing-purple',
+  'glowing-ice', 'glowing-orange', 'glowing-magenta', 'glowing-turquoise', 'glowing-lime'
+];
 const SHADOW_STYLES = [
   '0 0 10px rgba(57, 255, 20, 0.35)',
   '0 0 10px rgba(0, 240, 255, 0.35)',
   '0 0 10px rgba(255, 0, 85, 0.35)',
   '0 0 10px rgba(255, 183, 0, 0.35)',
   '0 0 10px rgba(176, 38, 255, 0.35)',
-  '0 0 10px rgba(0, 168, 255, 0.35)'
+  '0 0 10px rgba(0, 168, 255, 0.35)',
+  '0 0 10px rgba(255, 95, 0, 0.35)',
+  '0 0 10px rgba(255, 0, 255, 0.35)',
+  '0 0 10px rgba(0, 255, 204, 0.35)',
+  '0 0 10px rgba(223, 255, 17, 0.35)'
 ];
 
 // Audio Engine for Dynamic Synthesized Sound Effects
@@ -331,7 +344,7 @@ class Game {
   // --- Setup Controllers ---
   adjustTeamsCount(change) {
     const newCount = this.teamsCount + change;
-    if (newCount >= 2 && newCount <= 6) {
+    if (newCount >= 2 && newCount <= 10) {
       this.teamsCount = newCount;
       this.dom.teamsCountVal.textContent = this.teamsCount;
       this.renderSetupInputs();

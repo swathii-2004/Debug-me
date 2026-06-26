@@ -16,6 +16,10 @@
   --team-color-4: #ffb700; /* Neon Yellow */
   --team-color-5: #b026ff; /* Neon Purple */
   --team-color-6: #00a8ff; /* Neon Ice Blue */
+  --team-color-7: #ff5f00; /* Neon Orange */
+  --team-color-8: #ff00ff; /* Neon Magenta */
+  --team-color-9: #00ffcc; /* Neon Turquoise */
+  --team-color-10: #dfff11; /* Neon Lime */
 
   --shadow-1: 0 0 12px rgba(57, 255, 20, 0.4);
   --shadow-2: 0 0 12px rgba(0, 240, 255, 0.4);
@@ -23,6 +27,10 @@
   --shadow-4: 0 0 12px rgba(255, 183, 0, 0.4);
   --shadow-5: 0 0 12px rgba(176, 38, 255, 0.4);
   --shadow-6: 0 0 12px rgba(0, 168, 255, 0.4);
+  --shadow-7: 0 0 12px rgba(255, 95, 0, 0.4);
+  --shadow-8: 0 0 12px rgba(255, 0, 255, 0.4);
+  --shadow-9: 0 0 12px rgba(0, 255, 204, 0.4);
+  --shadow-10: 0 0 12px rgba(223, 255, 17, 0.4);
 }
 
 /* Reset & Base Styles */
@@ -348,6 +356,10 @@ body::before {
 .team-input-wrapper[data-team="4"] .team-name-input:focus { border-color: var(--team-color-4); box-shadow: 0 0 6px rgba(255, 183, 0, 0.2); }
 .team-input-wrapper[data-team="5"] .team-name-input:focus { border-color: var(--team-color-5); box-shadow: 0 0 6px rgba(176, 38, 255, 0.2); }
 .team-input-wrapper[data-team="6"] .team-name-input:focus { border-color: var(--team-color-6); box-shadow: 0 0 6px rgba(0, 168, 255, 0.2); }
+.team-input-wrapper[data-team="7"] .team-name-input:focus { border-color: var(--team-color-7); box-shadow: 0 0 6px rgba(255, 95, 0, 0.2); }
+.team-input-wrapper[data-team="8"] .team-name-input:focus { border-color: var(--team-color-8); box-shadow: 0 0 6px rgba(255, 0, 255, 0.2); }
+.team-input-wrapper[data-team="9"] .team-name-input:focus { border-color: var(--team-color-9); box-shadow: 0 0 6px rgba(0, 255, 204, 0.2); }
+.team-input-wrapper[data-team="10"] .team-name-input:focus { border-color: var(--team-color-10); box-shadow: 0 0 6px rgba(223, 255, 17, 0.2); }
 
 /* Scoreboard Styles */
 .scoreboard-section {
@@ -390,6 +402,10 @@ body::before {
 .score-card[data-team="4"].active-turn { border-color: var(--team-color-4); box-shadow: var(--shadow-4); }
 .score-card[data-team="5"].active-turn { border-color: var(--team-color-5); box-shadow: var(--shadow-5); }
 .score-card[data-team="6"].active-turn { border-color: var(--team-color-6); box-shadow: var(--shadow-6); }
+.score-card[data-team="7"].active-turn { border-color: var(--team-color-7); box-shadow: var(--shadow-7); }
+.score-card[data-team="8"].active-turn { border-color: var(--team-color-8); box-shadow: var(--shadow-8); }
+.score-card[data-team="9"].active-turn { border-color: var(--team-color-9); box-shadow: var(--shadow-9); }
+.score-card[data-team="10"].active-turn { border-color: var(--team-color-10); box-shadow: var(--shadow-10); }
 
 .team-dot {
   width: 5px;
@@ -582,6 +598,10 @@ body::before {
 .word-card.glowing-yellow .card-face { border-color: var(--team-color-4); box-shadow: inset 0 0 15px rgba(255, 183, 0, 0.04), var(--shadow-4); }
 .word-card.glowing-purple .card-face { border-color: var(--team-color-5); box-shadow: inset 0 0 15px rgba(176, 38, 255, 0.04), var(--shadow-5); }
 .word-card.glowing-ice .card-face { border-color: var(--team-color-6); box-shadow: inset 0 0 15px rgba(0, 168, 255, 0.04), var(--shadow-6); }
+.word-card.glowing-orange .card-face { border-color: var(--team-color-7); box-shadow: inset 0 0 15px rgba(255, 95, 0, 0.04), var(--shadow-7); }
+.word-card.glowing-magenta .card-face { border-color: var(--team-color-8); box-shadow: inset 0 0 15px rgba(255, 0, 255, 0.04), var(--shadow-8); }
+.word-card.glowing-turquoise .card-face { border-color: var(--team-color-9); box-shadow: inset 0 0 15px rgba(0, 255, 204, 0.04), var(--shadow-9); }
+.word-card.glowing-lime .card-face { border-color: var(--team-color-10); box-shadow: inset 0 0 15px rgba(223, 255, 17, 0.04), var(--shadow-10); }
 
 .card-state {
   display: flex;
@@ -621,6 +641,10 @@ body::before {
 .word-card.glowing-yellow .reveal-prompt { color: var(--team-color-4); text-shadow: var(--shadow-4); }
 .word-card.glowing-purple .reveal-prompt { color: var(--team-color-5); text-shadow: var(--shadow-5); }
 .word-card.glowing-ice .reveal-prompt { color: var(--team-color-6); text-shadow: var(--shadow-6); }
+.word-card.glowing-orange .reveal-prompt { color: var(--team-color-7); text-shadow: var(--shadow-7); }
+.word-card.glowing-magenta .reveal-prompt { color: var(--team-color-8); text-shadow: var(--shadow-8); }
+.word-card.glowing-turquoise .reveal-prompt { color: var(--team-color-9); text-shadow: var(--shadow-9); }
+.word-card.glowing-lime .reveal-prompt { color: var(--team-color-10); text-shadow: var(--shadow-10); }
 
 .guesser-warning {
   font-size: 0.65rem;
