@@ -957,7 +957,7 @@ class Game {
     this.isTieBreakerMode = true;
 
     const numTiedTeams = this.teams.length;
-    const wordsNeeded = numTiedTeams * 5;
+    const wordsNeeded = numTiedTeams * 2;
 
     let activePool = [];
     const shuffledPriority = this.shuffle(PRIORITY_WORDS);
@@ -976,7 +976,7 @@ class Game {
 
     this.teams.forEach(team => {
       team.words = [];
-      for (let k = 0; k < 5; k++) {
+      for (let k = 0; k < 2; k++) {
         team.words.push(activePool.pop());
       }
     });
